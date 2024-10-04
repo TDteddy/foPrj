@@ -1,0 +1,28 @@
+Main으로 실행(UI폴더에서 .ui파일을 불러와서 실행)
+
+[코드 Flow]
+
+0. Parameter
+- 각 거래소별 api의 public key와 private key 등 필요한 정보와 차후 멀티프로세싱에서 사용할 queue를 구성함
+- api의 public key 및 private key는 IP별로 발행해주므로 실행을 위해선 새로 발급받아야함
+
+1. Clients
+- 각 거래소의 매매 및 입출금 가능여부 확인
+- __Manager로 통합하여 관리
+
+2. Websockets
+- Clients에서 추려진 종목들의 실시간 호가 데이터를 웹소켓을 이용하여 받아옴(multiprocessing 패키지 활용)
+- __Manager로 통합하여 관리
+- Websocket_DataCollect_Arb에서 데이터를 취합하고 추후 Strategy모듈로 queue를 이용하여 데이터 공유
+
+3. Strategy
+- Websocket_DataCollect_Arb에서 취합된 데이터를 기반으로 계산을 진행하는 파트
+- 여기서 산출된 데이터를 기반으로 모니터링 및 매매에 활용
+- 산출 데이터를 차후 웹페이지 형태로 피딩할 예정
+
+4. Simulation
+- 산출된 데이터를 Simulation단에서 csv파일로 저장
+- 해당 데이터를 서버db에 우선 저장하고 스케쥴러 등을 활용하여 로컬 DB에 저장하는 형태로 개발원함
+
+5. UI
+- 데이터 모니터링
